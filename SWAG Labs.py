@@ -20,8 +20,10 @@ def enter_text_slowly(element, text):
         element.send_keys(char)
         time.sleep(0.1)
 def pass_screenshot(doc, driver, idx, message, doc_name):
+    screenshot_dir = r"C:\Users\91951\AppData\Local\Programs\Python\Python312\screenshots"
+    os.makedirs(screenshot_dir, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    screenshot_path = f"screenshots/screenshot_{timestamp}.png"
+    screenshot_path = os.path.join(screenshot_dir, f"screenshot_{timestamp}.png")
     driver.save_screenshot(screenshot_path)
     para = doc.add_paragraph()
     run_id = para.add_run(f"Test Case {idx}: ")
@@ -31,7 +33,6 @@ def pass_screenshot(doc, driver, idx, message, doc_name):
     run.add_picture(screenshot_path, width=Inches(7))
     doc.save(doc_name)
     os.remove(screenshot_path)
-
 class Login:
     @staticmethod
     def login_url(driver, username, password):
