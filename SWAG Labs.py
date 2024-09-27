@@ -1,23 +1,18 @@
 import os
 import time
 from datetime import datetime
-import docx  # Import the actual python-docx library
-from docx.shared import Inches, RGBColor
-from docx.oxml import OxmlElement
-import driver
+import docx
+from docx.shared import Inches
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common import actions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import UnexpectedAlertPresentException, NoAlertPresentException
 
 def initialize_driver():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-    driver.maximize_window()  # Maximize the browser window
+    driver.maximize_window()
     return driver
 
 def enter_text_slowly(element, text):
@@ -163,17 +158,13 @@ def Order_a_product(driver):
             )
             finish_button.click()
             time.sleep(2)
-
-            try:
-                thank_you_message = WebDriverWait(driver, 5).until(
-                    EC.visibility_of_element_located((By.XPATH, "//*[@id='checkout_complete_container']/h2"))
-                )
-                if "Thank you for your order!" in thank_you_message.text:
-                    message = "Thank You Checkout Complete page"
-                else:
-                    message = f"Unexpected message: {thank_you_message.text}"
-            except Exception as e:
-                message = f"Error occurred while verifying 'Thank You' message: {e}"
+            thank_you_message = WebDriverWait(driver, 5).until(
+                EC.visibility_of_element_located((By.XPATH, "//*[@id='checkout_complete_container']/h2"))
+            )
+            if "Thank you for your order!" in thank_you_message.text:
+                message = "Thank You Checkout Complete page"
+            else:
+                message = f"Unexpected message: {thank_you_message.text}"
         else:
             message = f"Unexpected product price: {status_message.text}"
     except Exception as e:
